@@ -18,13 +18,14 @@ Resources:
         - S3CrudPolicy:
             BucketName: !Ref BucketNameParameter
       Events:
-        BucketEvent1:
+        objectStore8D65849F:
           Type: S3
           Properties:
-            Bucket: !Ref Bucket1
+            Bucket: !Ref objectStore8D65849F
             Events:
               - s3:ObjectCreated:*
-  Bucket1:
+              - s3:ObjectRemoved:*
+  objectStore8D65849F:
     Type: AWS::S3::Bucket
-    Metadata:
-      StackeryName: myBucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-objectstore8d65849f
