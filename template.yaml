@@ -1,31 +1,38 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: An Amazon S3 trigger that retrieves metadata for the object that has been updated.
-Parameters:
-  BucketNameParameter:
-    Type: String
 Resources:
-  s3getobject:
+  objectStore349B8720:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-objectstore349b8720
+  function5EA4BC86:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: !Sub ${AWS::StackName}-function5EA4BC86
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: function5EA4BC86
+      CodeUri: src/function5EA4BC86
       Handler: index.handler
-      Runtime: nodejs6.10
-      CodeUri: .
-      Description: An Amazon S3 trigger that retrieves metadata for the object that has been updated.
-      MemorySize: 128
-      Timeout: 3
+      Runtime: nodejs8.10
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
       Policies:
-        - S3CrudPolicy:
-            BucketName: !Ref BucketNameParameter
+        - AWSXrayWriteOnlyAccess
       Events:
-        objectStore8D65849F:
+        objectStore349B8720:
           Type: S3
           Properties:
-            Bucket: !Ref objectStore8D65849F
+            Bucket: !Ref objectStore349B8720
             Events:
               - s3:ObjectCreated:*
               - s3:ObjectRemoved:*
-  objectStore8D65849F:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub ${AWS::StackName}-objectstore8d65849f
+Parameters:
+  StackTagName:
+    Type: String
+    Description: Stack Name (injected by Stackery at deployment time)
+  EnvironmentTagName:
+    Type: String
+    Description: Environment Name (injected by Stackery at deployment time)
